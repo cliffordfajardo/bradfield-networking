@@ -1,7 +1,7 @@
 const net = require('net');
 const config = {
   destination_server: {
-    port: 9000,            // port of `server.py`
+    port: 9000,        // port of `server.py` inside of `lab-http-proxy-exercise` folder.
     host: 'localhost'  // hostname of `server.py
   },
   port: 9001,
@@ -10,6 +10,12 @@ const config = {
 
 const socket_pool = [/** Everytime we get a new connection into `reverse_proxy_server`, store its reference.*/];
 
+/**
+ * Cache reponses. Imagine that I as an admin said, I want to cache the response for these routes...
+ */
+const cache = {
+  '/': null
+};
 
 // Create a new TCP socket. We'll use this socket to connect to your target-server.
 const forwarding_socket = new net.Socket();
@@ -21,8 +27,7 @@ forwarding_socket.connect(config.destination_server, () => {
 
 
 
-  // Now that we've established a socket connection to the target server,
-  // Create a proxy server to handle incoming requests to it.
+  // Now that we've established a socket connection to the target server, create a proxy server to handle incoming requests to it.
   const reverse_proxy_server = net.createServer();
   
   reverse_proxy_server.on('connection', (client_conn_socket) => {
@@ -32,12 +37,16 @@ forwarding_socket.connect(config.destination_server, () => {
   
     // Respond when the client has sent us data.
     client_conn_socket.on('data', (data) => {
-      console.log(`[INCOMING ..CLIENT@${client_conn_socket.remoteAddress}:${client_conn_socket.remotePort}]:\n---DATA--\n${data}---DATA--\n`);
+      console.log(`[INCOMING ..CLIENT@${client_conn_socket.remoteAddress}:${client_conn_socket.remotePort}]:\n---START_DATA--\n${data}\n---END_DATA--\n`);
       
 
+      if(!cache['/']) {
+        forwarding_socket.write(data, 'utf-8');// Send the data to the destination server
+      } else {
+        console.log('CACHE HIT');
+        client_conn_socket.write(cache['/']);
+      }
       
-      // Send the data to the destination server
-      forwarding_socket.write(data, 'utf-8');
 
       // send the data back to original client
       // client_conn_socket.write(data); 
@@ -45,10 +54,18 @@ forwarding_socket.connect(config.destination_server, () => {
 
     // When we recieve data back from the end server, send it back to the original requesting client.
     forwarding_socket.on('data', (data) => {
-      console.log('Incoming data from end-server ↓\n----DATA---');
+      console.log('Incoming data from end-server ↓\n----START_DATA---');
       console.log(data.toString('utf-8'));
-      console.log(`\n----DATA---\n`)
-      client_conn_socket.write(data);
+      console.log(`\n----END_DATA---\n`)
+
+      if(!cache['/']) {
+        console.log('adding data to cache')
+        client_conn_socket.write(data)
+        cache['/'] = data;  
+      } else {
+        console.log('CACHE HIT');
+        client_conn_socket.write(cache['/']);
+      }
     })
 
 

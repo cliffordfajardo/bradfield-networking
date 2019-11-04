@@ -202,8 +202,7 @@ class ProxyServer(object):
 
         while self.inputs:
             try:
-                readable, writable, exceptional = \
-                    select.select(self.inputs, self.outputs, self.inputs)
+                readable, writable, exceptional = select.select(self.inputs, self.outputs, self.inputs)
 
                 for s in readable:
                     # if the proxy socket itself is readable, we have a new
@@ -216,12 +215,11 @@ class ProxyServer(object):
                         # TODO handle no available connections
                         dest = [k for k, v in self.server_connections.items()
                                 if v is self.ConnectionState.AVAILABLE][0]
-                        self.server_connections[dest] = \
-                            self.ConnectionState.UNAVAILABLE
+                        self.server_connections[dest] = self.ConnectionState.UNAVAILABLE
                         self.mapping[client_connection] = dest
                         self.mapping[dest] = client_connection
                     else:
-                        data = s.recv(4096)
+                        data = s.recv(4096)         # read up to 4kb of data at most
                         # readable socket with data: ingest it for forwarding
                         if data:
                             self._log(self.LogAction.RECEIVED, s, data)

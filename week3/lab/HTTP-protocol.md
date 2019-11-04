@@ -1,0 +1,3 @@
+# HTTP Protocol
+
+Connection: close

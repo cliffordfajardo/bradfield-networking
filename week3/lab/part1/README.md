@@ -1,4 +1,4 @@
-# Part 1: Creating a Basic TCP Echo server
+# Part 1: Basic TCP Echo server
 
 ## Goal
 The goal is to create a tcp server that will echo back to it's client whatever it recieves.
