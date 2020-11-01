@@ -1,0 +1,27 @@
+{
+  "name": "pcapture-the-flag",
+  "version": "1.0.0",
+  "description": "pcap parsing exercise",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theRemix/PCapture-the-Flag-node.git"
+  },
+  "keywords": [
+    "pcap",
+    "networking",
+    "ctf"
+  ],
+  "author": "Jon Borgonia <jon.borgonia@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/theRemix/PCapture-the-Flag-node/issues"
+  },
+  "homepage": "https://github.com/theRemix/PCapture-the-Flag-node#readme"
+}

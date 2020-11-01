@@ -1,0 +1,14 @@
+{
+  "name": "ping",
+  "version": "1.0.0",
+  "description": "# Motivation This module implements a basic version of the `ping` command which uses `ICMP` protocol. I decided to implement a basic version of `ping` first, since it's a smaller scoped program, before diving into builing my implementation of `traceroute`, which is similar to `ping`, but it does more like counting the # of hops between my desitination and reporting it back to me, whereas ping doesn't include the # of hops to my destination.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Clifford",
+  "license": "ISC",
+  "devDependencies": {
+    "raw-socket": "^1.7.0"
+  }
+}
